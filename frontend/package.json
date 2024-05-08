@@ -9,13 +9,9 @@
     "axios": "^1.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-<<<<<<< HEAD
     "react-router-dom": "^6.23.0",
     "react-scripts": "5.0.1",
     "swr": "^2.2.5",
-=======
-    "react-scripts": "^5.0.1",
->>>>>>> c5804acb7e728b5a6a0ef92192ece3e0eea7d7fa
     "web-vitals": "^2.1.4"
   },
   "scripts": {
