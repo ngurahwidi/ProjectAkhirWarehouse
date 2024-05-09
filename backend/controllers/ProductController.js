@@ -76,3 +76,31 @@ export const deleteProduct = async (req, res) => {
         res.status(400).json({msg: error.message})
     }
 }
+
+export const createProductWithbarangMasuk = async (req, res) => {
+    const {id_barang, tanggal, jumlah, id_suppliers } = req.body;  
+    console.log('Request body:', req.body);
+    try {
+        
+      const entry = await prisma.barangMasuk.create({
+          data: {
+              barang: { connect: { id: id_barang } },
+              tanggal,
+              jumlah,
+              supplier: { connect: { id: id_suppliers } }
+          }        
+      });
+      await prisma.barang.update({
+        where: { id: id_barang },
+            data: {
+                stok: {
+                    increment: jumlah
+                }
+            }
+        });
+      console.log('New entry created:', entry);
+      res.status(201).json(entry);
+  } catch (error) {
+      res.status(400).json({ msg: error.message });
+    }
+  };
