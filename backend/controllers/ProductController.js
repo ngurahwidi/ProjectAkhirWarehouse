@@ -36,6 +36,11 @@ export const createProduct = async (req, res) => {
                 deskripsi: deskripsi
             }
         })
+        await prisma.barang.update({
+            where:{
+                id 
+            }
+        })
         res.status(201).json(barang)
     } catch (error) {
         res.status(400).json({msg: error.message})
