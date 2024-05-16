@@ -5,6 +5,7 @@ import ProductList from './components/ProductList';
 import AddProduct from './components/AddProduct';
 import EditProduct from './components/EditProduct';
 import Dashboard from './components/Dashboard';
+import AddInput from './components/BarangMasuk';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Route path="/products" element={<ProductList/>}/>
       <Route path="/add" element={<AddProduct/>}/>
       <Route path="/edit/:id" element={<EditProduct/>}/>
+      <Route path="/inputs" element={<AddInput/>}/>
     </Routes>
    </BrowserRouter>
   );
