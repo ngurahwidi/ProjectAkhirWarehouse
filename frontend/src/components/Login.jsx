@@ -15,11 +15,12 @@ const Login = () => {
     <div className="min-h-screen bg-cover bg-center flex flex-col justify-center sm:py-12 px-6 lg:px-8" style={{backgroundImage: `url("/gambar/gudanglaptop.jpeg")`}}>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Tambahkan logo di sini */}
-        <h2 className="text-center text-3xl font-extrabold text-blue-500">LOGIN ADMIN</h2>
+        
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <h2 className="text-center text-3xl font-extrabold text-blue-500">LOGIN</h2>
         <img src="/gambar/SST.png" alt="Logo" className="mx-auto mb-4" style={{ width: '200px' }} />
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>

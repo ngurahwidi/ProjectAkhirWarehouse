@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const AddInput = () => {
+const FormBarangMasuk = () => {
   const [idBarang, setIdBarang] = useState('');
   const [tanggal, setTanggal] = useState('');
   const [jumlah, setJumlah] = useState('');
@@ -92,4 +92,4 @@ const AddInput = () => {
   );
 };
 
-export default AddInput;
+export default FormBarangMasuk;
