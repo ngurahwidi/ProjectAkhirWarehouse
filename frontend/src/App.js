@@ -8,6 +8,9 @@ import Dashboard from './pages/Dashboard';
 import BarangMasuk from './pages/BarangMasuk';
 import BarangKeluar from './pages/BarangKeluar';
 
+import EditBarangMasuk from './components/FormEditBarangMasuk';
+import EditBarangKeluar from './components/FormEditBarangKeluar';
+
 const App = () => {
   return (
    <BrowserRouter>
@@ -19,6 +22,10 @@ const App = () => {
       <Route path="/edit/:id" element={<EditProduct/>}/>
       <Route path="/barangMasuk" element={<BarangMasuk/>}/>
       <Route path="/barangKeluar" element={<BarangKeluar/>}/>
+
+      <Route path="/barangMasuk/:id" element={<EditBarangMasuk/>}/>
+      <Route path="/barangKeluar/:id" element={<EditBarangKeluar/>}/>
+
     </Routes>
    </BrowserRouter>
   );

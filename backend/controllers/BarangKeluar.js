@@ -80,7 +80,7 @@ export const updateKeluar = async (req, res) => {
         where: { id: previousEntry.barang.id },
         data: {
           stok: {
-            decrement: previousEntry.jumlah,
+            increment: previousEntry.jumlah,
           },
         },
       });
@@ -116,7 +116,7 @@ export const updateKeluar = async (req, res) => {
         where: { id: entryToDelete.barang.id },
         data: {
           stok: {
-            decrement: entryToDelete.jumlah,
+            increment: entryToDelete.jumlah,
           },
         },
       });
