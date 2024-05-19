@@ -16,7 +16,7 @@ const Sidebar = () => {
                     <NavLink to={"/barangMasuk"} className="block p-2 hover:bg-gray-700 flex gap-2 items-center"><IoBagAdd />Barang Masuk</NavLink>
                     </li>
                     <li className="mb-2">
-                        <a href="#" className="block p-2 hover:bg-gray-700 flex gap-2 items-center"><IoBagRemove />Barang Keluar</a>
+                    <NavLink to={"/barangKeluar"} className="block p-2 hover:bg-gray-700 flex gap-2 items-center"><IoBagRemove />Barang Keluar</NavLink>
                     </li>
                     <li className="mb-2">
                         <a href="#" className="block p-2 hover:bg-gray-700 flex gap-2 items-center"><IoExit />Logout</a>

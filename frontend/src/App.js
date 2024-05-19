@@ -6,6 +6,7 @@ import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
 import Dashboard from './pages/Dashboard';
 import BarangMasuk from './pages/BarangMasuk';
+import BarangKeluar from './pages/BarangKeluar';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Route path="/add" element={<AddProduct/>}/>
       <Route path="/edit/:id" element={<EditProduct/>}/>
       <Route path="/barangMasuk" element={<BarangMasuk/>}/>
+      <Route path="/barangKeluar" element={<BarangKeluar/>}/>
     </Routes>
    </BrowserRouter>
   );
