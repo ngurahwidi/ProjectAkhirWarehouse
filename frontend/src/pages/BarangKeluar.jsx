@@ -1,13 +1,13 @@
-import React from 'react'
-import Layout from './Layout'
-import FormBarangKeluar from '../components/FormBarangKeluar'
+import React from "react";
+import BarangKeluarList from "../components/BarangKeluarList";
+import Layout from "./Layout";
 
 const BarangKeluar = () => {
   return (
     <Layout>
-        <FormBarangKeluar/>
+      <BarangKeluarList />
     </Layout>
-  )
-}
+  );
+};
 
-export default BarangKeluar
+export default BarangKeluar;
