@@ -36,7 +36,7 @@ const FormBarangMasuk = () => {
         icon: "success",
         button: "Ok",
       });
-      navigate("/products"); //barngMasuk
+      navigate("/barangMasuk"); //barngMasuk
     } catch (error) {
       alert("Terjadi kesalahan saat menambahkan barang masuk");
       console.error(error);

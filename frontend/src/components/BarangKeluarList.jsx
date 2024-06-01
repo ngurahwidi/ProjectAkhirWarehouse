@@ -61,8 +61,8 @@ const BarangKeluarList = () => {
                   <td className="py-3 px-1 text-center">{index + 1}</td>
                   <td className="py-3 px-6">{keluar.tanggal}</td>
                   <td className="py-3 px-6">{keluar.jumlah}</td>
-                  <td className="py-3 px-6">{keluar.id_barang}</td>
-                  <td className="py-3 px-6">{keluar.id_customers}</td>
+                  <td className="py-3 px-6">{keluar.barang.nama}</td>
+                  <td className="py-3 px-6">{keluar.customer.nama}</td>
                   <td className="py-3 px-1 text-center">
                     <Link
                       to={`/barangKeluar/${keluar.id}`}

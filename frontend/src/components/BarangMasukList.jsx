@@ -15,23 +15,23 @@ const BarangMasukList = () => {
   if (!data) return <h2>Loading....</h2>;
 
   const deleteInputs = async (inputsId) => {
-    await axios.delete(`http://localhost:5000/inputs/${inputsId}`);
     swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this imaginary file!",
+      text: "Once deleted, you will not be able to recover this file!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
+    }).then(async (willDelete) => {
       if (willDelete) {
-        swal("Poof! Your imaginary file has been deleted!", {
+        await axios.delete(`http://localhost:5000/inputs/${inputsId}`);
+        swal("Poof! Your file has been deleted!", {
           icon: "success",
         });
+        mutate("inputs");
       } else {
-        swal("Your imaginary file is safe!");
+        swal("Your file is safe!");
       }
     });
-    mutate("inputs");
   };
 
   return (
@@ -50,8 +50,8 @@ const BarangMasukList = () => {
                 <th className="py-3 px-1 text-center">No</th>
                 <th className="py-3 px-6">Tanggal</th>
                 <th className="py-3 px-6">Jumlah</th>
-                <th className="py-3 px-6">Id Barang</th>
-                <th className="py-3 px-6">Id Suplier</th>
+                <th className="py-3 px-6">Barang</th>
+                <th className="py-3 px-6">Supplier</th>
                 <th className="py-3 px-1 text-center">Action</th>
               </tr>
             </thead>
@@ -61,8 +61,8 @@ const BarangMasukList = () => {
                   <td className="py-3 px-1 text-center">{index + 1}</td>
                   <td className="py-3 px-6">{inputs.tanggal}</td>
                   <td className="py-3 px-6">{inputs.jumlah}</td>
-                  <td className="py-3 px-6">{inputs.id_barang}</td>
-                  <td className="py-3 px-6">{inputs.id_suppliers}</td>
+                  <td className="py-3 px-6">{inputs.barang.nama}</td>
+                  <td className="py-3 px-6">{inputs.supplier.nama}</td>
                   <td className="py-3 px-1 text-center">
                     <Link
                       to={`/barangMasuk/${inputs.id}`}
