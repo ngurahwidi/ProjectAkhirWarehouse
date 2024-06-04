@@ -10,14 +10,14 @@ Content-Type: application/json
 GET  http://localhost:5000/suplliers
 ###
 
-GET  http://localhost:5000/suplliers/1
+GET  http://localhost:5000/suplliers/3
 ###
 
 POST http://localhost:5000/suplliers
 Content-Type: application/json
 
 {
-"nama": "supplier 3",
+"nama": "Andi",
 "no_hp": "081223456999",
 "email": "widi3@gmail.com"
 }
@@ -38,7 +38,7 @@ GET http://localhost:5000/inputs
 ###
 GET http://localhost:5000/keluar
 
-POST http://localhost:5000/inputs
+POST http://localhost:5000/
 Content-Type: application/json
 
 {
@@ -46,4 +46,24 @@ Content-Type: application/json
         "tanggal":"27-12-02",
         "jumlah":"10",
         "supplier":"widi"
+}
+###
+POST http://localhost:5000/customers
+Content-Type: application/json
+
+{
+        "nama": "",
+        "no_hp":"27-12-02",
+        "email":"10",
+}
+###
+GET http://localhost:5000/customers/3
+###
+PATCH http://localhost:5000/customers/3
+Content-Type: application/json
+
+{
+    "nama": "Ryodian",
+    "no_hp": "081223456789",
+    "email": "ryo@gmail.com"
 }

@@ -11,6 +11,12 @@ import EditBarangMasuk from "./pages/EditBarangMasuk";
 import EditBarangKeluar from "./pages/EditBarangKeluar";
 import BarangMasuk from "./pages/BarangMasuk";
 import BarangKeluar from "./pages/BarangKeluar";
+import Customers from "./pages/Customers";
+import AddCustomer from "./pages/AddCustomer";
+import EditCustomer from "./pages/EditCustomer";
+import Suppliers from "./pages/Suppliers";
+import AddSupplier from "./pages/AddSupplier";
+import EditSupplier from "./pages/EditSupplier";
 
 const App = () => {
   return (
@@ -27,6 +33,12 @@ const App = () => {
         <Route path="/barangKeluar" element={<BarangKeluar />} />
         <Route path="/barangKeluar/add" element={<AddBarangKeluar />} />
         <Route path="/barangKeluar/:id" element={<EditBarangKeluar />} />
+        <Route path="/customers" element={<Customers />} />
+        <Route path="/customers/add" element={<AddCustomer />} />
+        <Route path="/customers/:id" element={<EditCustomer />} />
+        <Route path="/suppliers" element={<Suppliers />} />
+        <Route path="/suppliers/add" element={<AddSupplier />} />
+        <Route path="/suppliers/:id" element={<EditSupplier />} />
       </Routes>
     </BrowserRouter>
   );
