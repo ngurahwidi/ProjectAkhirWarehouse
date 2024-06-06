@@ -4,10 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 
 const EditBarangKeluar = () => {
-  const [idBarang, setIdBarang] = useState('');
+  const [barang, setBarang] = useState(null);
   const [tanggal, setTanggal] = useState('');
   const [jumlah, setJumlah] = useState('');
-  const [idCustomer, setIdCustomer] = useState('');
+  const [customer, setCustomer] = useState(null);
+  const [daftarBarang, setDaftarBarang] = useState([]);
+  const [daftarCustomer, setDaftarCustomer] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -15,10 +17,16 @@ const EditBarangKeluar = () => {
     const getBarangKeluarById = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/keluar/${id}`);
-        setIdBarang(response.data.id_barang);
+        setBarang(response.data.barang);
         setTanggal(new Date(response.data.tanggal).toISOString().split('T')[0]);
         setJumlah(response.data.jumlah);
-        setIdCustomer(response.data.id_customers);
+        setCustomer(response.data.customer);
+
+        const responseDaftarBarang = await axios.get('http://localhost:5000/products');
+        setDaftarBarang(responseDaftarBarang.data);  
+        
+        const responseDaftarCustomer = await axios.get('http://localhost:5000/customers');
+        setDaftarCustomer(responseDaftarCustomer.data);
       } catch (error) {
         console.error('Error fetching the data', error);
       }
@@ -31,10 +39,10 @@ const EditBarangKeluar = () => {
     try {
       const tanggalObj = new Date(tanggal);
       await axios.patch(`http://localhost:5000/keluar/${id}`, {
-        id_barang: parseInt(idBarang),
+        id_barang: barang.id,
         tanggal: tanggalObj.toISOString(),
         jumlah: parseInt(jumlah),
-        id_customer: parseInt(idCustomer),
+        id_customer: customer.id,
       });
       swal({
         title: "Sukses!",
@@ -42,7 +50,7 @@ const EditBarangKeluar = () => {
         icon: "success",
         button: "Ok",
       });
-      navigate("/keluar");
+      navigate("/barangKeluar");
     } catch (error) {
       console.error('Error updating the data', error);
       swal({
@@ -60,14 +68,19 @@ const EditBarangKeluar = () => {
       <form onSubmit={updateBarangKeluar} className='my-10'>
         <div className='flex flex-col'>
           <div className='mb-5'>
-            <label className='font-bold text-slate-700'>ID Barang</label>
-            <input 
-              type="text" 
-              className='w-full py-3 mt-1 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow' 
-              placeholder='ID Barang' 
-              value={idBarang} 
-              onChange={(e) => setIdBarang(e.target.value)} 
-            />
+            <label className='font-bold text-slate-700'>Nama Barang</label>
+            <select 
+              className='w-full py-3 mt-1 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow'
+              value={barang ? barang.id : ''}
+              onChange={(e) => setBarang(daftarBarang.find((item) => item.id === parseInt(e.target.value)))}
+            >
+              <option value="">Pilih Barang</option>
+              {daftarBarang.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nama}
+                </option>
+              ))}
+            </select>
           </div>
           <div className='mb-5'>
             <label className='font-bold text-slate-700'>Tanggal</label>
@@ -89,14 +102,19 @@ const EditBarangKeluar = () => {
             />
           </div>
           <div className='mb-5'>
-            <label className='font-bold text-slate-700'>ID Customer</label>
-            <input 
-              type="text" 
-              className='w-full py-3 mt-1 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow' 
-              placeholder='ID Customer' 
-              value={idCustomer} 
-              onChange={(e) => setIdCustomer(e.target.value)} 
-            />
+            <label className='font-bold text-slate-700'>Nama Customer</label>
+            <select
+              className='w-full py-3 mt-1 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow'
+              value={customer ? customer.id : ''}
+              onChange={(e) => setCustomer(daftarCustomer.find((item) => item.id === parseInt(e.target.value)))}
+            >
+              <option value="">Pilih Customer</option>
+              {daftarCustomer.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nama}
+                </option>
+              ))}
+            </select>
           </div>
           <button 
             type='submit' 

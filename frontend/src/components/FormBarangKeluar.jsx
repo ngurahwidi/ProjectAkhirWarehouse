@@ -1,18 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 
 const FormBarangKeluar = () => {
-  const [idBarang, setIdBarang] = useState("");
+  const [barang, setBarang] = useState(null);
   const [tanggal, setTanggal] = useState("");
   const [jumlah, setJumlah] = useState("");
-  const [idCustomer, setIdCustomer] = useState("");
+  const [customer, setCustomer] = useState(null);
+  const [daftarBarang, setDaftarBarang] = useState([]);
+  const [daftarCustomer, setDaftarCustomer] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseBarang = await axios.get("http://localhost:5000/products");
+        setDaftarBarang(responseBarang.data);
+
+        const responseCustomer = await axios.get("http://localhost:5000/customers");
+        setDaftarCustomer(responseCustomer.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const saveOutput = async (e) => {
     e.preventDefault();
-    if (!idBarang || !jumlah || !idCustomer) {
+    if (!barang || !jumlah || !customer) {
       alert("Harap isi semua field yang diperlukan");
       return;
     }
@@ -25,10 +43,10 @@ const FormBarangKeluar = () => {
     try {
       const tanggalObj = new Date(tanggal);
       await axios.post("http://localhost:5000/keluar", {
-        id_barang: parseInt(idBarang),
+        id_barang: barang.id,
         tanggal: tanggalObj.toISOString(),
         jumlah: parseInt(jumlah),
-        id_customer: parseInt(idCustomer),
+        id_customer: customer.id,
       });
       swal({
         title: "Sukses!",
@@ -36,7 +54,7 @@ const FormBarangKeluar = () => {
         icon: "success",
         button: "Ok",
       });
-      navigate("/products"); //barangKeluar
+      navigate("/barangKeluar"); //barangKeluar
     } catch (error) {
       alert("Terjadi kesalahan saat menambahkan barang keluar");
       console.error(error);
@@ -51,14 +69,21 @@ const FormBarangKeluar = () => {
       <form onSubmit={saveOutput} className="my-10">
         <div className="flex flex-col">
           <div className="mb-5">
-            <label className="font-bold text-slate-700">ID Barang</label>
-            <input
-              type="text"
+            <label className="font-bold text-slate-700">Nama Barang</label>
+            <select
               className="w-full py-3 mt-1 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-              placeholder="ID Barang"
-              value={idBarang}
-              onChange={(e) => setIdBarang(e.target.value)}
-            />
+              value={barang ? barang.id : ""}
+              onChange={(e) =>
+                setBarang(daftarBarang.find((item) => item.id === parseInt(e.target.value)))
+              }
+            >
+              <option value="">Pilih Barang</option>
+              {daftarBarang.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nama}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-5">
             <label className="font-bold text-slate-700">Tanggal</label>
@@ -80,14 +105,21 @@ const FormBarangKeluar = () => {
             />
           </div>
           <div className="mb-5">
-            <label className="font-bold text-slate-700">ID Customer</label>
-            <input
-              type="text"
+            <label className="font-bold text-slate-700">Nama Customer</label>
+            <select
               className="w-full py-3 mt-1 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-              placeholder="ID Customer"
-              value={idCustomer}
-              onChange={(e) => setIdCustomer(e.target.value)}
-            />
+              value={customer ? customer.id : ""}
+              onChange={(e) =>
+                setCustomer(daftarCustomer.find((item) => item.id === parseInt(e.target.value)))
+              }
+            >
+              <option value="">Pilih Customer</option>
+              {daftarCustomer.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nama}
+                </option>
+              ))}
+            </select>
           </div>
           <button
             type="submit"

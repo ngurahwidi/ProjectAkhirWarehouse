@@ -50,8 +50,8 @@ const BarangKeluarList = () => {
                 <th className="py-3 px-1 text-center">No</th>
                 <th className="py-3 px-6">Tanggal</th>
                 <th className="py-3 px-6">Jumlah</th>
-                <th className="py-3 px-6">Id Barang</th>
-                <th className="py-3 px-6">Id Customer</th>
+                <th className="py-3 px-6">Barang</th>
+                <th className="py-3 px-6">Customer</th>
                 <th className="py-3 px-1 text-center">Action</th>
               </tr>
             </thead>
