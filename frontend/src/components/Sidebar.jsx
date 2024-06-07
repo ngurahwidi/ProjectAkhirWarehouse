@@ -1,8 +1,34 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoBag, IoBagAdd, IoBagRemove, IoExit } from "react-icons/io5";
+import axios from 'axios';
+
+
 
 const Sidebar = () => {
+
+    const navigate = useNavigate()
+   
+
+
+    const handleLogout = async (event) => {
+    
+
+      try {
+        const response = await axios.get("http://localhost:5000/logout");
+        console.log(response.data);
+       
+        navigate("/");
+      } catch (error) {
+       
+        if (error.response && error.response.data) {
+          console.error(error.response.data.message);
+        } else {
+          console.error("Network error:", error.message);
+        }
+      }
+    };
+
     return (
         <div className="flex h-screen">
             {/* Sidebar cok */}
@@ -19,7 +45,7 @@ const Sidebar = () => {
                     <NavLink to={"/barangKeluar"} className="block p-2 hover:bg-gray-700 flex gap-2 items-center"><IoBagRemove />Barang Keluar</NavLink>
                     </li>
                     <li className="mb-2">
-                        <a href="#" className="block p-2 hover:bg-gray-700 flex gap-2 items-center"><IoExit />Logout</a>
+                        <button onClick={handleLogout} className="block p-2 hover:bg-gray-700 flex gap-2 items-center"><IoExit />Logout</button>
                     </li>
                 </ul>
             </div>

@@ -11,22 +11,34 @@ import EditBarangMasuk from "./pages/EditBarangMasuk";
 import EditBarangKeluar from "./pages/EditBarangKeluar";
 import BarangMasuk from "./pages/BarangMasuk";
 import BarangKeluar from "./pages/BarangKeluar";
+import withAuth from "./components/autentikasi"; // Import HOC untuk proteksi rute
+
+const ProtectedDashboard = withAuth(Dashboard);
+const ProtectedProducts = withAuth(Products);
+const ProtectedAddProduct = withAuth(AddProduct);
+const ProtectedEditProduct = withAuth(EditProduct);
+const ProtectedBarangMasuk = withAuth(BarangMasuk);
+const ProtectedAddBarangMasuk = withAuth(AddBarangMasuk);
+const ProtectedEditBarangMasuk = withAuth(EditBarangMasuk);
+const ProtectedBarangKeluar = withAuth(BarangKeluar);
+const ProtectedAddBarangKeluar = withAuth(AddBarangKeluar);
+const ProtectedEditBarangKeluar = withAuth(EditBarangKeluar);
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/add" element={<AddProduct />} />
-        <Route path="/edit/:id" element={<EditProduct />} />
-        <Route path="/barangMasuk" element={<BarangMasuk />} />
-        <Route path="/barangMasuk/add" element={<AddBarangMasuk />} />
-        <Route path="/barangMasuk/:id" element={<EditBarangMasuk />} />
-        <Route path="/barangKeluar" element={<BarangKeluar />} />
-        <Route path="/barangKeluar/add" element={<AddBarangKeluar />} />
-        <Route path="/barangKeluar/:id" element={<EditBarangKeluar />} />
+        <Route path="/dashboard" element={<ProtectedDashboard />} />
+        <Route path="/products" element={<ProtectedProducts />} />
+        <Route path="/add" element={<ProtectedAddProduct />} />
+        <Route path="/edit/:id" element={<ProtectedEditProduct />} />
+        <Route path="/barangMasuk" element={<ProtectedBarangMasuk />} />
+        <Route path="/barangMasuk/add" element={<ProtectedAddBarangMasuk />} />
+        <Route path="/barangMasuk/:id" element={<ProtectedEditBarangMasuk />} />
+        <Route path="/barangKeluar" element={<ProtectedBarangKeluar />} />
+        <Route path="/barangKeluar/add" element={<ProtectedAddBarangKeluar />} />
+        <Route path="/barangKeluar/:id" element={<ProtectedEditBarangKeluar />} />
       </Routes>
     </BrowserRouter>
   );

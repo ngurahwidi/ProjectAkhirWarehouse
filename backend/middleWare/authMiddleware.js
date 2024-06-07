@@ -19,7 +19,7 @@ export const protect = async ( req , res , next ) => {
                 id:verified.id
             },
             select:{
-                id: true, // Misalkan Anda ingin mengambil ID
+                id: true, 
                 name: true,
                 email: true,
                 bio: true,
