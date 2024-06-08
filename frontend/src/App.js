@@ -17,6 +17,8 @@ import EditCustomer from "./pages/EditCustomer";
 import Suppliers from "./pages/Suppliers";
 import AddSupplier from "./pages/AddSupplier";
 import EditSupplier from "./pages/EditSupplier";
+import ScanQRCode from "./components/ScanQRCode";
+import GenerateMasuk from "./pages/GenerateMasuk";
 
 const App = () => {
   return (
@@ -39,6 +41,8 @@ const App = () => {
         <Route path="/suppliers" element={<Suppliers />} />
         <Route path="/suppliers/add" element={<AddSupplier />} />
         <Route path="/suppliers/:id" element={<EditSupplier />} />
+        <Route path="/generateMasuk" element={<GenerateMasuk />} />
+        <Route path="/scan" element={<ScanQRCode />} />
       </Routes>
     </BrowserRouter>
   );

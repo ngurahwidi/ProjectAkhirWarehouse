@@ -5,7 +5,7 @@ import { FaUserTag, FaUserTie } from "react-icons/fa6";
 
 const Sidebar = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen fixed ">
       {/* Sidebar cok */}
       <div className="bg-gray-800 text-white w-64 flex flex-col">
         <img
@@ -40,6 +40,15 @@ const Sidebar = () => {
             >
               <IoBag />
               List Barang
+            </NavLink>
+          </li>
+          <li className="mb-2">
+            <NavLink
+              to={"/generateMasuk"}
+              className=" p-2 hover:bg-gray-700 flex gap-2 items-center"
+            >
+              <IoBagRemove />
+              Generate Code Masuk
             </NavLink>
           </li>
           <li className="mb-2">
