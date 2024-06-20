@@ -10,24 +10,24 @@ const ScanQRCodeKeluar = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [tanggal, setTanggal] = useState("");
   const [jumlah, setJumlah] = useState("");
-  const [supplier, setSupplier] = useState(null);
-  const [daftarSupplier, setDaftarSupplier] = useState([]);
+  const [customer, setCustomer] = useState(null);
+  const [daftarCustomer, setDaftarCustomer] = useState([]);
   const navigate = useNavigate();
   const qrCodeRef = useRef(null);
 
-  // Fetch suppliers from the API
+  // Fetch customers from the API
   useEffect(() => {
-    const fetchSuppliers = async () => {
+    const fetchCustomers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/suppliers");
-        setDaftarSupplier(response.data);
+        const response = await axios.get("http://localhost:5000/customers");
+        setDaftarCustomer(response.data);
       } catch (error) {
-        console.error("Error fetching suppliers:", error);
+        console.error("Error fetching customers:", error);
         // Optionally, show an alert or message to inform the user of the error
       }
     };
 
-    fetchSuppliers();
+    fetchCustomers();
   }, []);
 
   // Handle successful QR code scan
@@ -89,7 +89,7 @@ const ScanQRCodeKeluar = () => {
         scanner
           .clear()
           .catch((error) =>
-            console.error("Failed to clear html5-qrcode", error)
+            console.error("Failed to clear html5-qrcode scanner", error)
           );
       };
     }
@@ -115,13 +115,23 @@ const ScanQRCodeKeluar = () => {
       return;
     }
 
-    if (!tanggal || !jumlah || !supplier) {
-      alert("Please fill in all required fields.");
+    if (!tanggal || !jumlah || !customer) {
+      swal({
+        title: "Missing Information",
+        text: "Please fill in all required fields.",
+        icon: "error",
+        button: "OK",
+      });
       return;
     }
 
     if (isNaN(jumlah) || jumlah <= 0) {
-      alert("Jumlah barang harus berupa angka positif");
+      swal({
+        title: "Invalid Input",
+        text: "Jumlah barang harus berupa angka positif.",
+        icon: "error",
+        button: "OK",
+      });
       return;
     }
 
@@ -131,18 +141,14 @@ const ScanQRCodeKeluar = () => {
         id_barang: parseInt(scanResult.id),
         tanggal: tanggalObj.toISOString(),
         jumlah: parseInt(jumlah),
-        id_suppliers: parseInt(supplier.id),
+        id_customer: parseInt(customer.id),
       };
 
       // Submit data to backend
-      console.log("Data to be submitted:", dataToSubmit);
-
       const response = await axios.post(
-        "http://localhost:5000/inputs",
+        "http://localhost:5000/keluar",
         dataToSubmit
       );
-
-      console.log("Response from server:", response.data);
 
       swal({
         title: "Success!",
@@ -150,14 +156,24 @@ const ScanQRCodeKeluar = () => {
         icon: "success",
         button: "OK",
       });
-      navigate("/barangMasuk"); // Redirect to barangMasuk page
+      navigate("/barangKeluar"); // Redirect to barangKeluar page
     } catch (error) {
       console.error("Error during request:", error);
-      if (error.response) {
-        console.error("Server responded with status:", error.response.status);
-        console.error("Response data:", error.response.data);
+      if (error.response && error.response.data && error.response.data.msg) {
+        swal({
+          title: "Error",
+          text: error.response.data.msg,
+          icon: "error",
+          button: "OK",
+        });
+      } else {
+        swal({
+          title: "Error",
+          text: "Terjadi kesalahan saat menambahkan barang keluar.",
+          icon: "error",
+          button: "OK",
+        });
       }
-      alert("Terjadi kesalahan saat menambahkan barang masuk");
     }
   };
 
@@ -183,7 +199,7 @@ const ScanQRCodeKeluar = () => {
     <div className="max-w-xl mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-500 relative grid gap-4">
       <div className="w-80">
         <a
-          href="/barangmasuk/add"
+          href="/barangKeluar/add"
           className="mb-8 text-center py-3 px-12 font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow"
         >
           Manual
@@ -272,21 +288,21 @@ const ScanQRCodeKeluar = () => {
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700">
-                ID Suppliers
+                ID Customer
               </label>
               <select
                 className="w-full py-3 mt-1 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-                value={supplier ? supplier.id : ""}
+                value={customer ? customer.id : ""}
                 onChange={(e) =>
-                  setSupplier(
-                    daftarSupplier.find(
+                  setCustomer(
+                    daftarCustomer.find(
                       (item) => item.id === parseInt(e.target.value)
                     )
                   )
                 }
               >
-                <option value="">Pilih Supplier</option>
-                {daftarSupplier.map((item) => (
+                <option value="">Pilih Customer</option>
+                {daftarCustomer.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.nama}
                   </option>

@@ -3,35 +3,156 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import useSwr, { useSWRConfig } from "swr";
 import swal from "sweetalert";
+import jsPDF from "jspdf";
+import QRCode from "qrcode.react";
+import QRCodeLib from "qrcode"; // Import qrcode library
+import ReactDOM from "react-dom"; // Import ReactDOM for rendering
 
 const ProductList = () => {
   const { mutate } = useSWRConfig();
+
+  // Define the fetcher function here
   const fetcher = async () => {
     const response = await axios.get("http://localhost:5000/products");
     return response.data;
   };
 
-  const { data } = useSwr("products", fetcher);
+  // Use useSwr hook to fetch data
+  const { data, error } = useSwr("products", fetcher);
+
+  // Error handling
+  if (error) return <h2>Failed to load products</h2>;
+
+  // Loading state while fetching data
   if (!data) return <h2>Loading....</h2>;
 
+  // Function to delete a product
   const deleteProduct = async (productId) => {
-    await axios.delete(`http://localhost:5000/products/${productId}`);
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
+    }).then(async (willDelete) => {
       if (willDelete) {
-        swal("Poof! Your imaginary file has been deleted!", {
-          icon: "success",
-        });
+        try {
+          await axios.delete(`http://localhost:5000/products/${productId}`);
+          swal("Poof! Your imaginary file has been deleted!", {
+            icon: "success",
+          });
+          mutate("products");
+        } catch (error) {
+          swal("Error deleting product", {
+            icon: "error",
+          });
+        }
       } else {
         swal("Your imaginary file is safe!");
       }
     });
-    mutate("products");
+  };
+
+  // Function to view product information
+  const viewProductInfo = (product) => {
+    const qrCodeValue = JSON.stringify({
+      id : product.id,
+      Kode: product.kode,
+      Nama: product.nama,
+      Harga: product.harga,
+      Stok: product.stok,
+      Deskripsi: product.deskripsi,
+    });
+
+    const container = document.createElement("div");
+    container.style.textAlign = "left";
+
+    // Render QR code inside the container
+    ReactDOM.render(
+      <div
+        style={{
+          display: "flex",
+          marginTop: "20px",
+          justifyContent: "space-between",
+          width: "80%",
+          margin: "auto",
+        }}
+      >
+        <div>
+          <p>
+            <strong>ID:</strong> {product.id}
+          </p>
+          <p>
+            <strong>Kode:</strong> {product.kode}
+          </p>
+          <p>
+            <strong>Nama:</strong> {product.nama}
+          </p>
+          <p>
+            <strong>Harga:</strong> {product.harga}
+          </p>
+          <p>
+            <strong>Stok:</strong> {product.stok}
+          </p>
+          <p>
+            <strong>Deskripsi:</strong> {product.deskripsi}
+          </p>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <QRCode value={qrCodeValue} size={128} />
+        </div>
+      </div>,
+      container
+    );
+
+    swal({
+      title: "Product Information",
+      content: container, // Pass the container element to SweetAlert
+      buttons: {
+        print: {
+          text: "Print Info",
+          className: "bg-green-500 ",
+          value: "print",
+        },
+        close: "Close",
+      },
+    }).then((value) => {
+      if (value === "print") {
+        generatePDF(product, qrCodeValue);
+      }
+    });
+  };
+
+  // Function to generate PDF
+  const generatePDF = (product, qrCodeValue) => {
+    const { kode, nama, harga, stok, deskripsi } = product;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const centerX = pageWidth / 2;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(24); // Set font size for the title
+    doc.text("Product Information", centerX, 15, { align: "center" });
+
+    // Reset font style and size
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+
+    // Add product information to the PDF
+    doc.text(`Product: ${nama}`, 18, 30);
+    doc.text(`Kode: ${kode}`, 18, 40);
+    doc.text(`Harga: ${harga}`, 18, 50);
+    doc.text(`Stok: ${stok}`, 18, 60);
+    doc.text(`Deskripsi: ${deskripsi}`, 18, 70);
+
+    // Generate QR code as base64 using qrcode library
+    QRCodeLib.toDataURL(qrCodeValue, { width: 128, margin: 2 }, (err, url) => {
+      if (err) return console.error(err);
+
+      // Add QR code to the PDF
+      doc.addImage(url, "JPEG", pageWidth - 68, 25, 50, 50); // Position the QR code
+      doc.save(`${nama}_details.pdf`);
+    });
   };
 
   return (
@@ -51,9 +172,9 @@ const ProductList = () => {
                 <th className="py-3 px-6">Kode</th>
                 <th className="py-3 px-6">Nama</th>
                 <th className="py-3 px-6">Harga</th>
-                <th className="py-3 px-6">stok</th>
+                <th className="py-3 px-6">Stok</th>
                 <th className="py-3 px-6">Deskripsi</th>
-                <th className="py-3 px-1 text-center">Action</th>
+                <th className="py-3 px-1 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -77,6 +198,12 @@ const ProductList = () => {
                       className="font-medium bg-red-500 hover:bg-red-700 px-3 py-1 rounded text-white mr-1"
                     >
                       Delete
+                    </button>
+                    <button
+                      onClick={() => viewProductInfo(product)}
+                      className="font-medium bg-blue-500 hover:bg-blue-700 px-3 py-1 rounded text-white"
+                    >
+                      View Info
                     </button>
                   </td>
                 </tr>

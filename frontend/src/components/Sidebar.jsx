@@ -1,9 +1,30 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoBag, IoBagAdd, IoBagRemove, IoExit } from "react-icons/io5";
 import { FaUserTag, FaUserTie } from "react-icons/fa6";
+import axios from "axios";
 
 const Sidebar = () => {
+
+   const navigate = useNavigate()
+   const handleLogout = async ( event ) =>{
+    try {
+      const response = await axios.get("http://localhost:5000/logout",{
+        withCredentials : true, 
+      })
+      console.log(response.data)
+      document.cookie ="token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      navigate("/")
+
+    } catch (error) {
+      if(error.response && error.response.data)
+        {
+          console.error(error.response.data.message)
+        } else {
+          console.log("Network Error : " , error.message)
+        }
+    }
+   }
   return (
     <div className="flex h-screen fixed ">
       {/* Sidebar cok */}
@@ -44,15 +65,6 @@ const Sidebar = () => {
           </li>
           <li className="mb-2">
             <NavLink
-              to={"/generateMasuk"}
-              className=" p-2 hover:bg-gray-700 flex gap-2 items-center"
-            >
-              <IoBagRemove />
-              Generate Code Masuk
-            </NavLink>
-          </li>
-          <li className="mb-2">
-            <NavLink
               to={"/barangMasuk"}
               className="block p-2 hover:bg-gray-700 flex gap-2 items-center"
             >
@@ -70,13 +82,13 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li className="mb-2">
-            <a
-              href="#"
+            <button
+              onClick={handleLogout}
               className="block p-2 hover:bg-gray-700 flex gap-2 items-center"
             >
               <IoExit />
               Logout
-            </a>
+            </button>
           </li>
         </ul>
       </div>

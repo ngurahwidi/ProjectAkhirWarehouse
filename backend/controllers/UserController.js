@@ -195,45 +195,87 @@ export const loginStatus = async ( req , res )=>{
 
 
 
-// export const Login = async (req, res) => {
-//   try {
-//     const user = await prisma.user.findMany({
-//       where: {
-//         email: req.body.email,
-//       },
-//     });
-//     const match = await bcrypt.compare(req.body.password, user[0].password);
-//     if (!match) return res.status(400).json({ msg: "Password Salah" });
-//     const userId = user[0].id;
-//     const userName = user[0].username;
-//     const email = user[0].email;
-//     const accessToken = jwt.sign(
-//       { userId, userName, email },
-//       process.env.ACCESS_TOKEN_SECRET,
-//       {
-//         expiresIn: "20s",
-//       }
-//     );
-//     const refreshToken = jwt.sign(
-//       { userId, userName, email },
-//       process.env.REFRESH_TOKEN_SECRET,
-//       {
-//         expiresIn: "1d",
-//       }
-//     );
-//     await prisma.user.update({
-//       where: {
-//         id: userId,
-//       },
-//     });
-//     res.cookie("refreshToken", refreshToken, {
-//       httpOnly: true,
-//       maxAge: 24 * 60 * 60 * 1000,
-//     });
-//     res.json({ accessToken });
-//   } catch (error) {
-//     res.status(404).json({ msg: "Email Tidak Ditemukan" });
-//   }
-// };
+export const updateUser = async (req , res , next) =>{
+  try {
+    const user = await prisma.user.findUnique({where : {
+      id :req.user.id
+    }})
 
+    if (user){
+      const update = await prisma.user.update({
+        where:{
+          id : req.user.id
+        } , 
+        data:{
+          name  : req.body.name || user.name ,
+          email : user.email,
+          phone : req.body.phone || user.phone ,
+          photo : req.body.photo || user.photo ,
+          bio   : req.body.bio || user.bio, 
+        },
+        select:{
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          photo: true,
+          bio: true
+        }
+      })
+      res.status(201).json(update)
 
+    } else {
+      res.status(404)
+      throw new Error ("User tidak di temukan ")
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const changePassword = async (req , res , next ) =>{
+try {
+
+  const user = await prisma.user.findUnique({
+      where : {
+      id: req.user.id
+    }
+  })
+  
+  if(!user){
+    res.status(401)
+    throw new Error ("User not authorized ")
+  }
+
+  const {oldPassword , newPassword } = req.body 
+  // validasi 
+
+  if(!oldPassword || !newPassword || newPassword.length < 6 ){
+    res.status(422)
+    throw new Error(" isi password lama dan password baru dan isi 6 character")
+  }
+  
+   
+  const passwordIsCorrect = await bcrypt.compare(oldPassword , user.password)
+
+  if(passwordIsCorrect){
+    const hashedPassword = await bcrypt.hash(newPassword,10)
+    
+    await prisma.user.update({
+      where : {
+        id : req.user.id
+      },
+      data:{
+        password:hashedPassword
+      }
+    }) 
+    res.status(200).json({ message: "Password changed successfully." });
+  } else {
+    res.status(400)
+    throw new Error("Password salah ")
+  }
+  } catch (error) {
+
+  next(error)
+}
+}

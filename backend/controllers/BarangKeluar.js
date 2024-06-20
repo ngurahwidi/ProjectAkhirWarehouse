@@ -32,6 +32,22 @@ export const getKeluarById = async (req, res) => {
 export const createKeluar = async (req, res) => {
   const { id_barang, tanggal, jumlah, id_customer } = req.body;
   try {
+    // Fetch the current stock of the item
+    const barang = await prisma.barang.findUnique({
+      where: { id: id_barang },
+      select: { stok: true },
+    });
+
+    if (!barang) {
+      return res.status(404).json({ msg: "Barang not found" });
+    }
+
+    // Check if the stock is sufficient
+    if (barang.stok < jumlah) {
+      return res.status(400).json({ msg: "Stok tidak cukup untuk jumlah yang diminta" });
+    }
+
+    // Create barangKeluar record
     const keluar = await prisma.barangKeluar.create({
       data: {
         barang: { connect: { id: id_barang } },
@@ -41,6 +57,7 @@ export const createKeluar = async (req, res) => {
       },
     });
 
+    // Update stock
     await prisma.barang.update({
       where: { id: id_barang },
       data: {
@@ -49,11 +66,13 @@ export const createKeluar = async (req, res) => {
         },
       },
     });
+
     res.status(201).json(keluar);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
 };
+
 
 export const updateKeluar = async (req, res) => {
   const { id_barang, tanggal, jumlah, id_customer } = req.body;
