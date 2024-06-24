@@ -14,23 +14,30 @@ const SuppliersList = () => {
   const { data } = useSwr("suppliers", fetcher);
   if (!data) return <h2>Loading....</h2>;
   const deleteSupplier = async (supplierId) => {
-    await axios.delete(`http://localhost:5000/suppliers/${supplierId}`);
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
+    }).then(async (willDelete) => {
       if (willDelete) {
-        swal("Poof! Your imaginary file has been deleted!", {
-          icon: "success",
-        });
+        try {
+          await axios.delete(`http://localhost:5000/suppliers/${supplierId}`);
+           swal("Poof! Your imaginary file has been deleted!", {
+             icon: "success",
+           });
+          mutate("suppliers");
+        } catch (error) {
+          swal("error di database ",{
+            icon:"error"
+          })
+        }
+
       } else {
         swal("Your imaginary file is safe!");
       }
     });
-    mutate("suppliers");
   };
   return (
     <div className="flex flex-col mt-6">

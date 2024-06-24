@@ -137,7 +137,7 @@ const BarangKeluarList = () => {
     const pageWidth = doc.internal.pageSize.getWidth();
     const centerX = pageWidth / 2;
 
-    // Set font style to bold for the title
+    // Set font style 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(24);
     doc.text("Keluar Information", centerX, 15, { align: "center" });
@@ -154,7 +154,7 @@ const BarangKeluarList = () => {
     doc.text(`Jumlah: ${jumlah}`, 14, 70);
     doc.text(`Tanggal: ${tanggal}`, 14, 80);
 
-    // Generate QR code as base64 using qrcode library
+    // Generate QR code 
     QRCodeLib.toDataURL(qrCodeValue, { width: 128, margin: 2 }, (err, url) => {
       if (err) return console.error(err);
 

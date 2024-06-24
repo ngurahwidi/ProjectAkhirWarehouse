@@ -11,22 +11,19 @@ import ReactDOM from "react-dom"; // Import ReactDOM for rendering
 const ProductList = () => {
   const { mutate } = useSWRConfig();
 
-  // Define the fetcher function here
   const fetcher = async () => {
     const response = await axios.get("http://localhost:5000/products");
     return response.data;
   };
 
-  // Use useSwr hook to fetch data
   const { data, error } = useSwr("products", fetcher);
 
-  // Error handling
   if (error) return <h2>Failed to load products</h2>;
 
-  // Loading state while fetching data
+  
   if (!data) return <h2>Loading....</h2>;
 
-  // Function to delete a product
+  
   const deleteProduct = async (productId) => {
     swal({
       title: "Are you sure?",
@@ -53,7 +50,6 @@ const ProductList = () => {
     });
   };
 
-  // Function to view product information
   const viewProductInfo = (product) => {
     const qrCodeValue = JSON.stringify({
       id : product.id,
@@ -67,7 +63,6 @@ const ProductList = () => {
     const container = document.createElement("div");
     container.style.textAlign = "left";
 
-    // Render QR code inside the container
     ReactDOM.render(
       <div
         style={{
@@ -107,7 +102,7 @@ const ProductList = () => {
 
     swal({
       title: "Product Information",
-      content: container, // Pass the container element to SweetAlert
+      content: container, 
       buttons: {
         print: {
           text: "Print Info",
@@ -123,7 +118,6 @@ const ProductList = () => {
     });
   };
 
-  // Function to generate PDF
   const generatePDF = (product, qrCodeValue) => {
     const { kode, nama, harga, stok, deskripsi } = product;
     const doc = new jsPDF();
@@ -131,25 +125,21 @@ const ProductList = () => {
     const centerX = pageWidth / 2;
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(24); // Set font size for the title
+    doc.setFontSize(24); 
     doc.text("Product Information", centerX, 15, { align: "center" });
 
-    // Reset font style and size
     doc.setFont("helvetica", "normal");
     doc.setFontSize(14);
 
-    // Add product information to the PDF
     doc.text(`Product: ${nama}`, 18, 30);
     doc.text(`Kode: ${kode}`, 18, 40);
     doc.text(`Harga: ${harga}`, 18, 50);
     doc.text(`Stok: ${stok}`, 18, 60);
     doc.text(`Deskripsi: ${deskripsi}`, 18, 70);
 
-    // Generate QR code as base64 using qrcode library
     QRCodeLib.toDataURL(qrCodeValue, { width: 128, margin: 2 }, (err, url) => {
       if (err) return console.error(err);
 
-      // Add QR code to the PDF
       doc.addImage(url, "JPEG", pageWidth - 68, 25, 50, 50); // Position the QR code
       doc.save(`${nama}_details.pdf`);
     });

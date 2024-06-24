@@ -29,20 +29,18 @@ const Login = () => {
 
       if (response && response.data) {
         console.log(response.data);
-        navigate("/dashboard"); // Navigate to the dashboard
+        navigate("/dashboard"); 
       } else {
         console.error("Invalid response from server");
-        // Handle invalid response from server
         setError("Invalid response from server");
       }
     } catch (error) {
       if (error.response && error.response.data) {
-        // If the error is from the server response
         console.error(error.response.data.message);
-        setError(error.response.data.message); // Set error message from server
+        setError(error.response.data.message); 
       } else {
         console.error("Network error:", error.message);
-        setError("Network error occurred"); // Set generic network error message
+        setError("Network error occurred"); 
       }
     }
   };

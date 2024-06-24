@@ -1,17 +1,17 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import axios from "axios";
+import './Spinner.css';
 
 async function checkLoginStatus() {
   try {
-    const response = await axios.get('http://localhost:5000/loginStatus',{
-        withCredentials:true
+    const response = await axios.get('http://localhost:5000/loginStatus', {
+      withCredentials: true,
     });
-    console.log(response.data)
-    return response.data; // Mengembalikan data status login dari API
+    return response.data; 
   } catch (error) {
     console.error('Error:', error);
-    return false; // Mengembalikan false jika terjadi error
+    return false;
   }
 }
 
@@ -22,6 +22,9 @@ function withAuth(Component) {
 
     useEffect(() => {
       const fetchLoginStatus = async () => {
+        const MIN_LOADING_TIME = 500; 
+        const startTime = Date.now();
+
         try {
           const isLoggedIn = await checkLoginStatus();
           setIsLoggedIn(isLoggedIn);
@@ -29,7 +32,12 @@ function withAuth(Component) {
           console.error('Error fetching login status:', error);
           setIsLoggedIn(false);
         } finally {
-          setIsLoading(false);
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = MIN_LOADING_TIME - elapsedTime;
+
+          setTimeout(() => {
+            setIsLoading(false);
+          }, Math.max(0, remainingTime));
         }
       };
 
@@ -37,7 +45,13 @@ function withAuth(Component) {
     }, []);
 
     if (isLoading) {
-      return <div>Loading...</div>;
+      return (
+        <div className="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      );
     }
 
     return isLoggedIn ? <Component {...props} /> : <Navigate to="/" />;

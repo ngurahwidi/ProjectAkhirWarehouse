@@ -14,23 +14,30 @@ const CustomersList = () => {
   const { data } = useSwr("customers", fetcher);
   if (!data) return <h2>Loading....</h2>;
   const deleteCustomer = async (customerId) => {
-    await axios.delete(`http://localhost:5000/customers/${customerId}`);
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
+    }).then(async (willDelete) => {
       if (willDelete) {
-        swal("Poof! Your imaginary file has been deleted!", {
-          icon: "success",
-        });
+        try {
+          await axios.delete(`http://localhost:5000/customers/${customerId}`);
+          swal("Poof! Your imaginary file has been deleted!", {
+            icon: "success",
+          });
+           mutate("customers");
+        } catch (error) {
+          swal("eror di databse ",{
+            icon: "error"
+          })
+        }
       } else {
         swal("Your imaginary file is safe!");
       }
     });
-    mutate("customers");
+   
   };
 
   return (

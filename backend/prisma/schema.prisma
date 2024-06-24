@@ -61,10 +61,10 @@ model Supplier {
 }
 
 model User {
-  id        Int   @id @default(autoincrement())  // Jika Anda ingin menggunakan tipe data ObjectId di MongoDB, gunakan tipe data yang sesuai di Prisma.
+  id        Int   @id @default(autoincrement())  
   name      String   @db.VarChar(255)
   email     String   @unique 
-  password  String   // Anda tidak perlu menentukan panjang minimal atau maksimal di Prisma, ini biasanya ditangani di tingkat aplikasi.
+  password  String   
   photo     String   @default("https://uxwing.com/default-profile-picture-grey-male-icon/")
   phone     String   @default("+62")
   bio       String   @default("Bio")

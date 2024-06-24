@@ -7,11 +7,10 @@ async function checkLoginStatus() {
     const response = await axios.get('http://localhost:5000/loginStatus',{
         withCredentials:true
     });
-    console.log(response.data)
-    return response.data; // Mengembalikan data status login dari API
+    return response.data; 
   } catch (error) {
     console.error('Error:', error);
-    return false; // Mengembalikan false jika terjadi error
+    return false; 
   }
 }
 

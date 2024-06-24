@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IoBag, IoBagAdd, IoBagRemove, IoExit } from "react-icons/io5";
 import { FaUserTag, FaUserTie } from "react-icons/fa6";
+import { MdDashboard } from "react-icons/md";
 import axios from "axios";
 
 const Sidebar = () => {
@@ -36,6 +37,15 @@ const Sidebar = () => {
           style={{ width: "150px" }}
         />
         <ul className="p-2 flex-1">
+          <li className="mb-2">
+            <NavLink
+              to={"/dashboard"}
+              className="p-2 hover:bg-gray-700 flex gap-2 items-center"
+            >
+              <MdDashboard />
+              Dashboard
+            </NavLink>
+          </li>
           <li className="mb-2">
             <NavLink
               to={"/customers"}

@@ -129,7 +129,7 @@ const BarangMasukList = () => {
     });
   };
 
-  // Function to generate PDF
+
   const generatePDF = (product, inputs, qrCodeValue) => {
     const { nama, harga, deskripsi } = product;
     const { supplier, jumlah, tanggal } = inputs;
@@ -146,7 +146,7 @@ const BarangMasukList = () => {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
 
-    // Add input information to the PDF
+    // Add input information 
     doc.text(`Barang: ${nama}`, 14, 30);
     doc.text(`Harga: ${harga}`, 14, 40);
     doc.text(`Deskripsi: ${deskripsi}`, 14, 50);
@@ -154,13 +154,13 @@ const BarangMasukList = () => {
     doc.text(`Jumlah: ${jumlah}`, 14, 70);
     doc.text(`Tanggal: ${tanggal}`, 14, 80);
 
-    // Generate QR code as base64 using qrcode library
+    // Generate QR 
     QRCodeLib.toDataURL(qrCodeValue, { width: 128, margin: 2 }, (err, url) => {
       if (err) return console.error(err);
 
       // Add QR code to the PDF
       doc.addImage(url, "JPEG", pageWidth - 64, 25, 50, 50); // Position the QR code
-      doc.save(`${nama}-masuk_details.pdf`); // Save the PDF with barang.nama as the filename
+      doc.save(`${nama}-masuk_details.pdf`); // Save the PDF as the filename
     });
   };
 

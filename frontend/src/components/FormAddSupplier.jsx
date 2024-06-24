@@ -11,6 +11,12 @@ const FormAddSupplier = () => {
   const navigate = useNavigate();
 
   const saveSupplier = async (e) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if(!regex.test(setEmail)){
+
+      swal("format email harus benar ")
+
+    }
     e.preventDefault();
     await axios.post("http://localhost:5000/suppliers", {
       nama: nama,
