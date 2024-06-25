@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import swal from 'sweetalert';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 
 const FormBarangMasuk = () => {
   const [barang, setBarang] = useState(null);
-  const [tanggal, setTanggal] = useState('');
-  const [jumlah, setJumlah] = useState('');
+  const [tanggal, setTanggal] = useState("");
+  const [jumlah, setJumlah] = useState("");
   const [supplier, setSupplier] = useState(null);
   const [daftarBarang, setDaftarBarang] = useState([]);
   const [daftarSupplier, setDaftarSupplier] = useState([]);
@@ -15,13 +15,17 @@ const FormBarangMasuk = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseBarang = await axios.get('http://localhost:5000/products');
+        const responseBarang = await axios.get(
+          "http://localhost:5000/products"
+        );
         setDaftarBarang(responseBarang.data);
 
-        const responseSupplier = await axios.get('http://localhost:5000/suppliers');
+        const responseSupplier = await axios.get(
+          "http://localhost:5000/suppliers"
+        );
         setDaftarSupplier(responseSupplier.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -31,38 +35,38 @@ const FormBarangMasuk = () => {
   const saveInput = async (e) => {
     e.preventDefault();
     if (!barang || !jumlah || !supplier) {
-      alert('Harap isi semua field yang diperlukan');
+      alert("Harap isi semua field yang diperlukan");
       return;
     }
 
     if (isNaN(jumlah) || jumlah <= 0) {
-      alert('Jumlah barang harus berupa angka positif');
+      alert("Jumlah barang harus berupa angka positif");
       return;
     }
 
     try {
       const tanggalObj = new Date(tanggal);
-      await axios.post('http://localhost:5000/inputs', {
+      await axios.post("http://localhost:5000/inputs", {
         id_barang: barang.id,
         tanggal: tanggalObj.toISOString(),
         jumlah: parseInt(jumlah),
         id_suppliers: supplier.id,
       });
       swal({
-        title: 'Sukses!',
-        text: 'Berhasil Menyimpan Data Barang Masuk',
-        icon: 'success',
-        button: 'Ok',
+        title: "Sukses!",
+        text: "Berhasil Menyimpan Data Barang Masuk",
+        icon: "success",
+        button: "Ok",
       });
-      navigate('/barangMasuk'); //barangMasuk
+      navigate("/barangMasuk"); //barangMasuk
     } catch (error) {
-      alert('Terjadi kesalahan saat menambahkan barang masuk');
+      alert("Terjadi kesalahan saat menambahkan barang masuk");
       console.error(error);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-500">
+    <div className="w-full mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-500">
       <h1 className="text-center font-bold text-lg">
         Form Tambah Barang Masuk
       </h1>
@@ -130,7 +134,7 @@ const FormBarangMasuk = () => {
             </select>
           </div>
           <a
-            href='/scan'
+            href="/scan"
             className=" mb-4 text-center w-full py-3 font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow"
           >
             Scan
